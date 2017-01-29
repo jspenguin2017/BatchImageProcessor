@@ -6,7 +6,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -107,7 +109,7 @@ namespace Batch_Image_Processor
         }
 
         /// <summary>
-        /// Log textbox focus enter handler
+        /// Log textbox focus enter (only for Tab key) handler
         /// Select all text
         /// </summary>
         /// <param name="sender"></param>
@@ -115,6 +117,39 @@ namespace Batch_Image_Processor
         private void TBLog_Enter(object sender, EventArgs e)
         {
             TBLog.SelectAll();
+        }
+
+        /// <summary>
+        /// Log textbox text change handler
+        /// Reset group box title
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TBLog_TextChanged(object sender, EventArgs e)
+        {
+            GroupBoxLog.Text = "Log (Double Click to Copy)";
+        }
+
+        /// <summary>
+        /// Log textbox double click handler
+        /// Copy all text to clipboard when log textbox is double clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TBLog_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (TBLog.Text != "")
+            {
+                try
+                {
+                    Clipboard.SetText(TBLog.Text);
+                    GroupBoxLog.Text = "Log (Copied)";
+                }
+                catch (Exception err) when (err is ExternalException || err is ThreadStateException)
+                {
+                    MessageBox.Show("Failed to copy log to clipboard. ");
+                }
+            }
         }
 
         /// <summary>
