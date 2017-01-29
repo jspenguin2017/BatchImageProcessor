@@ -325,6 +325,7 @@ namespace Batch_Image_Processor
             }
             //Check resize dimensions
             bool resize = CBResize.Checked;
+            bool noUpscale = CBNoUpscale.Checked;
             int width = -1;
             int height = -1;
             if (resize)
@@ -389,7 +390,7 @@ namespace Batch_Image_Processor
                     Image scaledImg = new Bitmap(1, 1);
                     if (resize)
                     {
-                        if (!ImLib.ImScale(img, width, height, "", out scaledImg, false))
+                        if (!ImLib.ImScale(img, width, height, "", out scaledImg, noUpscale, false))
                         {
                             putLog("ERROR: Could not allocate memory to process " + validFiles[i]);
                             img.Dispose();
@@ -408,7 +409,7 @@ namespace Batch_Image_Processor
                     }
                     else
                     {
-                        outFile = Path.Combine(dirOut, fileNamePrefix + i.ToString() + fileNameSuffix);
+                        outFile = Path.Combine(dirOut, fileNamePrefix + i.ToString() + fileNameSuffix + Path.GetExtension(files[i]));
                     }
                     //Convert and write out
                     if (!ImLib.ImSave(resize ? scaledImg : img, outFile, format, false))
@@ -422,7 +423,14 @@ namespace Batch_Image_Processor
                 });
             });
             //Tell the user that we finished
-            MessageBox.Show("Processing finished, failed to process " + error.ToString() + " images out of " + total.ToString() + ". Please check the log for more details. ");
+            MessageBox.Show("Processing finished, successfully proccessed " + (total - error).ToString() + " images out of " + total.ToString() + ". Please check the log for more details. ");
+            if (CBLaunchWhenDone.Checked)
+            {
+                await Task.Run(() =>
+                {
+                    Process.Start(dirOut);
+                });
+            }
         }
 
         #endregion

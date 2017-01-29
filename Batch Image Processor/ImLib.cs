@@ -90,15 +90,21 @@ namespace Batch_Image_Processor
         /// <param name="maxHeight">The maximum height of output image</param>
         /// <param name="id">A string to identify the image, shown to the user if there is an error</param>
         /// <param name="img">The scaled image, will be 1x1 empty image if the operation was not successful</param>
+        /// <param name="noUpscale">Set this argument to true to prevent upscalling</param>
         /// <param name="showErr">Set this argument to true to show error message to the user</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public static bool ImScale(Image imIn, int maxWidth, int maxHeight, string id, out Image img, bool showErr)
+        public static bool ImScale(Image imIn, int maxWidth, int maxHeight, string id, out Image img, bool noUpscale, bool showErr)
         {
             //Find the ratio of old image to new image
             double ratioWidth = (double)maxWidth / imIn.Width;
             double ratioHeight = (double)maxHeight / imIn.Height;
             //Find which ratio to use
             double ratio = Math.Min(ratioWidth, ratioHeight);
+            if (noUpscale && ratio >= 1)
+            {
+                img = new Bitmap(imIn);
+                return true;
+            }
             //Calculate new width and height
             int newWidth = (int)Math.Ceiling((imIn.Width * ratio));
             int newHeight = (int)Math.Ceiling((imIn.Height * ratio));
