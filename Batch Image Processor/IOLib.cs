@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing.Imaging;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Batch_Image_Processor
@@ -46,6 +43,28 @@ namespace Batch_Image_Processor
                     //This should never happen
                     return ImageFormat.Png;
             }
+        }
+
+        /// <summary>
+        /// Invalid file name chars as string
+        /// </summary>
+        public static string InvalidFileNameChars
+        {
+            get
+            {
+                return new string(Path.GetInvalidFileNameChars());
+            }
+        }
+
+        /// <summary>
+        /// Check if a string can be a file name
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>True if the file name is valid, false otherwise</returns>
+        public static bool checkFileName(string fileName)
+        {
+            Regex fileNameValidator = new Regex("[" + Regex.Escape(InvalidFileNameChars) + "]");
+            return !fileNameValidator.IsMatch(fileName);
         }
     }
 }

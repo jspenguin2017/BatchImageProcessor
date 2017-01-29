@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,7 +22,7 @@ namespace Batch_Image_Processor
         }
 
         /// <summary>
-        /// The title of the main form
+        /// The name of this software
         /// </summary>
         public const string NAME = "Image Batch Processor v0.1 by X01X012013";
 
@@ -172,6 +166,76 @@ namespace Batch_Image_Processor
         #region Button Handlers
 
         /// <summary>
+        /// Start button handler
+        /// Start batch processing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void BtnStart_Click(object sender, EventArgs e)
+        {
+            //Check input directory
+            if (!Directory.Exists(TBDirIn.Text))
+            {
+                MessageBox.Show("Input directory does not exist. ");
+                TBDirIn.Focus();
+                return;
+            }
+            //Check output directory
+            if (!Directory.Exists(TBDirOut.Text))
+            {
+                if (MessageBox.Show("", "Output directory does not exist, would you like to create it? ", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(TBDirOut.Text);
+                    }
+                    catch (Exception err) when (err is IOException || err is UnauthorizedAccessException || err is ArgumentException || err is ArgumentNullException || err is PathTooLongException || err is DirectoryNotFoundException)
+                    {
+                        MessageBox.Show("Could not create output directory. ");
+                        TBDirOut.Focus();
+                        return;
+                    }
+                }
+                else
+                {
+                    TBDirOut.Focus();
+                    return;
+                }
+            }
+            //Check resize dimensions
+            int width;
+            int height;
+            if (CBLimRes.Checked)
+            {
+                if (!validateDimensions(out width, out height))
+                {
+                    return;
+                }
+            }
+            //Check file names
+            if (!CBKeepFileName.Checked)
+            {
+                if (!IOLib.checkFileName(TBRenamePrefix.Text))
+                {
+                    MessageBox.Show("File name prefix is not valid. ");
+                    TBRenamePrefix.Focus();
+                    return;
+                }
+                if (!IOLib.checkFileName(TBRenameSuffix.Text))
+                {
+                    MessageBox.Show("File name suffix is not valid. ");
+                    TBRenameSuffix.Focus();
+                    return;
+                }
+            }
+            //Start processing
+            await Task.Run(() =>
+            {
+
+            });
+        }
+
+        /// <summary>
         /// Create empty image button click hander
         /// Create an empty image and prompt the user to save the file
         /// </summary>
@@ -182,16 +246,8 @@ namespace Batch_Image_Processor
             int width;
             int height;
             //Parse width and height
-            if (!ImLib.ValidateDimention(TBEmptyImgWidth.Text, out width))
+            if (!validateDimensions(out width, out height))
             {
-                MessageBox.Show("The width entered is not valid. ");
-                TBEmptyImgWidth.Focus();
-                return;
-            }
-            if (!ImLib.ValidateDimention(TBEmptyImgHeight.Text, out height))
-            {
-                MessageBox.Show("The height entered is not valid. ");
-                TBEmptyImgHeight.Focus();
                 return;
             }
             //Set file type
@@ -202,7 +258,10 @@ namespace Batch_Image_Processor
                 //Lock UI while processing
                 GroupBoxCreateEmptyImg.Enabled = false;
                 //OK clicked, save file
-                bool success = await ImLib.ImEmpty(width, height, SaveFileDialogMain.FileName, IOLib.parseFormat(SaveFileDialogMain.FilterIndex - 1));
+                bool success = await Task.Run(() =>
+                {
+                    return ImLib.ImEmpty(width, height, SaveFileDialogMain.FileName, IOLib.parseFormat(SaveFileDialogMain.FilterIndex - 1));
+                });
                 //Launch directory if successful and checkbox checked
                 if (success && CBLaunchWhenDone.Checked)
                 {
@@ -212,7 +271,7 @@ namespace Batch_Image_Processor
                     });
                 }
                 //Log
-                TBLog.Text += (success ? "Created" : "Failed to create") + " empty image of size " + width.ToString() + "x" + height.ToString() + " to " + SaveFileDialogMain.FileName + Environment.NewLine;
+                putLog((success ? "Created" : "Failed to create") + " empty image of size " + width.ToString() + "x" + height.ToString() + " to " + SaveFileDialogMain.FileName);
                 //Unlock UI
                 GroupBoxCreateEmptyImg.Enabled = true;
             }
@@ -220,5 +279,48 @@ namespace Batch_Image_Processor
 
         #endregion
 
+        /// <summary>
+        /// Write log into log textbox, a new line will be automatically added
+        /// This method can be called from another thread
+        /// </summary>
+        /// <param name="msg">The message to write</param>
+        private void putLog(string msg)
+        {
+            if (TBLog.InvokeRequired)
+            {
+                Invoke((MethodInvoker)(() =>
+                {
+                    TBLog.Text += msg + Environment.NewLine;
+                }));
+            }
+            else
+            {
+                TBLog.Text += msg + Environment.NewLine;
+            }
+        }
+
+        /// <summary>
+        /// Validate dimension inputs
+        /// </summary>
+        /// <param name="width">The width output variable</param>
+        /// <param name="height">The height output varialbe</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        private bool validateDimensions(out int width, out int height)
+        {
+            if (!ImLib.ValidateDimension(TBEmptyImgWidth.Text, out width))
+            {
+                MessageBox.Show("The width entered is not valid. ");
+                TBEmptyImgWidth.Focus();
+                height = -1;
+                return false;
+            }
+            if (!ImLib.ValidateDimension(TBEmptyImgHeight.Text, out height))
+            {
+                MessageBox.Show("The height entered is not valid. ");
+                TBEmptyImgHeight.Focus();
+                return false;
+            }
+            return true;
+        }
     }
 }

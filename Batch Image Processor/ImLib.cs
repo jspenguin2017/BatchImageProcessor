@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -131,33 +128,30 @@ namespace Batch_Image_Processor
         /// <param name="outPath">The output path</param>
         /// <param name="format">The format of the image</param>
         /// <returns>True if operation was successful, false otherwise</returns>
-        public static async Task<bool> ImEmpty(int width, int height, string outPath, ImageFormat format)
+        public static bool ImEmpty(int width, int height, string outPath, ImageFormat format)
         {
-            return await Task.Run(() =>
+            //Create empty image
+            Bitmap bmp = new Bitmap(1, 1);
+            try
             {
-                //Create empty image
-                Bitmap bmp = new Bitmap(1, 1);
-                try
-                {
-                    bmp = new Bitmap(width, height);
-                }
-                catch (Exception err)
-                {
-                    MessageBox.Show("Failed to allocate memeory while creating empty image. " + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
-                    return false;
-                }
-                //Save the image
-                return ImSave(bmp, outPath, format);
-            });
+                bmp = new Bitmap(width, height);
+            }
+            catch (Exception err)
+            {
+                MessageBox.Show("Failed to allocate memeory while creating empty image. " + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                return false;
+            }
+            //Save the image
+            return ImSave(bmp, outPath, format);
         }
 
         /// <summary>
-        /// Parse a string into a dimention
+        /// Parse a string into a dimension
         /// </summary>
-        /// <param name="input">The dimention string</param>
+        /// <param name="input">The dimension string</param>
         /// <param name="output">The output integer, will be -1 if parsing failed</param>
         /// <returns>True if succeed, false otherwise</returns>
-        public static bool ValidateDimention(string input, out int output)
+        public static bool ValidateDimension(string input, out int output)
         {
             if (int.TryParse(input, out output))
             {
