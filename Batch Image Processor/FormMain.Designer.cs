@@ -54,15 +54,16 @@
             this.LabelOutFormat = new System.Windows.Forms.Label();
             this.ComboBoxOutFormat = new System.Windows.Forms.ComboBox();
             this.GroupBoxCreateEmptyImg = new System.Windows.Forms.GroupBox();
-            this.LabelEmptyImgFileName = new System.Windows.Forms.Label();
             this.LabelEmptyImgWidth = new System.Windows.Forms.Label();
             this.LabelEmptyImgHeight = new System.Windows.Forms.Label();
-            this.TBEmptyImgFileName = new System.Windows.Forms.TextBox();
             this.TBEmptyImgWidth = new System.Windows.Forms.TextBox();
             this.TBEmptyImgHeight = new System.Windows.Forms.TextBox();
             this.BtnCreateEmptyImg = new System.Windows.Forms.Button();
             this.GroupBoxLog = new System.Windows.Forms.GroupBox();
             this.TBLog = new System.Windows.Forms.TextBox();
+            this.LinkLabelAbout = new System.Windows.Forms.LinkLabel();
+            this.SaveFileDialogMain = new System.Windows.Forms.SaveFileDialog();
+            this.CBLaunchWhenDone = new System.Windows.Forms.CheckBox();
             this.GroupBoxResize.SuspendLayout();
             this.GroupBoxConvert.SuspendLayout();
             this.GroupBoxCreateEmptyImg.SuspendLayout();
@@ -84,7 +85,7 @@
             this.TBDirIn.Location = new System.Drawing.Point(178, 13);
             this.TBDirIn.Margin = new System.Windows.Forms.Padding(4);
             this.TBDirIn.Name = "TBDirIn";
-            this.TBDirIn.Size = new System.Drawing.Size(545, 25);
+            this.TBDirIn.Size = new System.Drawing.Size(741, 25);
             this.TBDirIn.TabIndex = 1;
             this.TBDirIn.DoubleClick += new System.EventHandler(this.BtnDirIn_Click);
             // 
@@ -93,7 +94,7 @@
             this.TBDirOut.Location = new System.Drawing.Point(178, 46);
             this.TBDirOut.Margin = new System.Windows.Forms.Padding(4);
             this.TBDirOut.Name = "TBDirOut";
-            this.TBDirOut.Size = new System.Drawing.Size(545, 25);
+            this.TBDirOut.Size = new System.Drawing.Size(741, 25);
             this.TBDirOut.TabIndex = 2;
             this.TBDirOut.DoubleClick += new System.EventHandler(this.BtnDirOut_Click);
             // 
@@ -109,7 +110,7 @@
             // 
             // BtnDirIn
             // 
-            this.BtnDirIn.Location = new System.Drawing.Point(732, 13);
+            this.BtnDirIn.Location = new System.Drawing.Point(927, 13);
             this.BtnDirIn.Margin = new System.Windows.Forms.Padding(4);
             this.BtnDirIn.Name = "BtnDirIn";
             this.BtnDirIn.Size = new System.Drawing.Size(124, 26);
@@ -120,7 +121,7 @@
             // 
             // BtnDirOut
             // 
-            this.BtnDirOut.Location = new System.Drawing.Point(732, 45);
+            this.BtnDirOut.Location = new System.Drawing.Point(927, 45);
             this.BtnDirOut.Margin = new System.Windows.Forms.Padding(4);
             this.BtnDirOut.Name = "BtnDirOut";
             this.BtnDirOut.Size = new System.Drawing.Size(124, 26);
@@ -224,6 +225,7 @@
             // 
             // GroupBoxConvert
             // 
+            this.GroupBoxConvert.Controls.Add(this.CBLaunchWhenDone);
             this.GroupBoxConvert.Controls.Add(this.GroupBoxCreateEmptyImg);
             this.GroupBoxConvert.Controls.Add(this.TBRenameSuffix);
             this.GroupBoxConvert.Controls.Add(this.TBRenamePrefix);
@@ -235,7 +237,7 @@
             this.GroupBoxConvert.Controls.Add(this.ComboBoxOutFormat);
             this.GroupBoxConvert.Location = new System.Drawing.Point(418, 78);
             this.GroupBoxConvert.Name = "GroupBoxConvert";
-            this.GroupBoxConvert.Size = new System.Drawing.Size(439, 329);
+            this.GroupBoxConvert.Size = new System.Drawing.Size(633, 322);
             this.GroupBoxConvert.TabIndex = 7;
             this.GroupBoxConvert.TabStop = false;
             this.GroupBoxConvert.Text = "Convert and Output";
@@ -245,7 +247,7 @@
             this.TBRenameSuffix.Enabled = false;
             this.TBRenameSuffix.Location = new System.Drawing.Point(86, 112);
             this.TBRenameSuffix.Name = "TBRenameSuffix";
-            this.TBRenameSuffix.Size = new System.Drawing.Size(347, 25);
+            this.TBRenameSuffix.Size = new System.Drawing.Size(541, 25);
             this.TBRenameSuffix.TabIndex = 7;
             // 
             // TBRenamePrefix
@@ -253,7 +255,7 @@
             this.TBRenamePrefix.Enabled = false;
             this.TBRenamePrefix.Location = new System.Drawing.Point(86, 78);
             this.TBRenamePrefix.Name = "TBRenamePrefix";
-            this.TBRenamePrefix.Size = new System.Drawing.Size(347, 25);
+            this.TBRenamePrefix.Size = new System.Drawing.Size(541, 25);
             this.TBRenamePrefix.TabIndex = 6;
             // 
             // LabelRenameSuffix
@@ -285,12 +287,13 @@
             this.CBKeepFileName.TabIndex = 3;
             this.CBKeepFileName.Text = "Keep original file name";
             this.CBKeepFileName.UseVisualStyleBackColor = true;
+            this.CBKeepFileName.CheckedChanged += new System.EventHandler(this.CBKeepFileName_CheckedChanged);
             // 
             // BtnStart
             // 
-            this.BtnStart.Location = new System.Drawing.Point(9, 143);
+            this.BtnStart.Location = new System.Drawing.Point(9, 169);
             this.BtnStart.Name = "BtnStart";
-            this.BtnStart.Size = new System.Drawing.Size(424, 48);
+            this.BtnStart.Size = new System.Drawing.Size(618, 47);
             this.BtnStart.TabIndex = 2;
             this.BtnStart.Text = "Start";
             this.BtnStart.UseVisualStyleBackColor = true;
@@ -308,9 +311,15 @@
             // 
             this.ComboBoxOutFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxOutFormat.FormattingEnabled = true;
+            this.ComboBoxOutFormat.Items.AddRange(new object[] {
+            ".bmp (Bitmap)",
+            ".gif (Graphics Interchange Format)",
+            ".jpg (Joint Photographic Experts Group)",
+            ".png (W3C Portable Network Graphics)",
+            ".tiff (Tagged Image File Format)"});
             this.ComboBoxOutFormat.Location = new System.Drawing.Point(139, 24);
             this.ComboBoxOutFormat.Name = "ComboBoxOutFormat";
-            this.ComboBoxOutFormat.Size = new System.Drawing.Size(294, 23);
+            this.ComboBoxOutFormat.Size = new System.Drawing.Size(488, 23);
             this.ComboBoxOutFormat.TabIndex = 0;
             // 
             // GroupBoxCreateEmptyImg
@@ -318,30 +327,19 @@
             this.GroupBoxCreateEmptyImg.Controls.Add(this.BtnCreateEmptyImg);
             this.GroupBoxCreateEmptyImg.Controls.Add(this.TBEmptyImgHeight);
             this.GroupBoxCreateEmptyImg.Controls.Add(this.TBEmptyImgWidth);
-            this.GroupBoxCreateEmptyImg.Controls.Add(this.TBEmptyImgFileName);
             this.GroupBoxCreateEmptyImg.Controls.Add(this.LabelEmptyImgHeight);
             this.GroupBoxCreateEmptyImg.Controls.Add(this.LabelEmptyImgWidth);
-            this.GroupBoxCreateEmptyImg.Controls.Add(this.LabelEmptyImgFileName);
-            this.GroupBoxCreateEmptyImg.Location = new System.Drawing.Point(9, 197);
+            this.GroupBoxCreateEmptyImg.Location = new System.Drawing.Point(9, 222);
             this.GroupBoxCreateEmptyImg.Name = "GroupBoxCreateEmptyImg";
-            this.GroupBoxCreateEmptyImg.Size = new System.Drawing.Size(424, 124);
+            this.GroupBoxCreateEmptyImg.Size = new System.Drawing.Size(618, 94);
             this.GroupBoxCreateEmptyImg.TabIndex = 8;
             this.GroupBoxCreateEmptyImg.TabStop = false;
-            this.GroupBoxCreateEmptyImg.Text = "Create Empty Image (Using Format Above)";
-            // 
-            // LabelEmptyImgFileName
-            // 
-            this.LabelEmptyImgFileName.AutoSize = true;
-            this.LabelEmptyImgFileName.Location = new System.Drawing.Point(6, 27);
-            this.LabelEmptyImgFileName.Name = "LabelEmptyImgFileName";
-            this.LabelEmptyImgFileName.Size = new System.Drawing.Size(95, 15);
-            this.LabelEmptyImgFileName.TabIndex = 0;
-            this.LabelEmptyImgFileName.Text = "File Name: ";
+            this.GroupBoxCreateEmptyImg.Text = "Create Empty Image";
             // 
             // LabelEmptyImgWidth
             // 
             this.LabelEmptyImgWidth.AutoSize = true;
-            this.LabelEmptyImgWidth.Location = new System.Drawing.Point(6, 58);
+            this.LabelEmptyImgWidth.Location = new System.Drawing.Point(6, 27);
             this.LabelEmptyImgWidth.Name = "LabelEmptyImgWidth";
             this.LabelEmptyImgWidth.Size = new System.Drawing.Size(63, 15);
             this.LabelEmptyImgWidth.TabIndex = 1;
@@ -350,48 +348,42 @@
             // LabelEmptyImgHeight
             // 
             this.LabelEmptyImgHeight.AutoSize = true;
-            this.LabelEmptyImgHeight.Location = new System.Drawing.Point(6, 89);
+            this.LabelEmptyImgHeight.Location = new System.Drawing.Point(6, 58);
             this.LabelEmptyImgHeight.Name = "LabelEmptyImgHeight";
             this.LabelEmptyImgHeight.Size = new System.Drawing.Size(71, 15);
             this.LabelEmptyImgHeight.TabIndex = 2;
             this.LabelEmptyImgHeight.Text = "Height: ";
             // 
-            // TBEmptyImgFileName
-            // 
-            this.TBEmptyImgFileName.Location = new System.Drawing.Point(107, 24);
-            this.TBEmptyImgFileName.Name = "TBEmptyImgFileName";
-            this.TBEmptyImgFileName.Size = new System.Drawing.Size(311, 25);
-            this.TBEmptyImgFileName.TabIndex = 3;
-            // 
             // TBEmptyImgWidth
             // 
-            this.TBEmptyImgWidth.Location = new System.Drawing.Point(107, 55);
+            this.TBEmptyImgWidth.Location = new System.Drawing.Point(107, 24);
             this.TBEmptyImgWidth.Name = "TBEmptyImgWidth";
-            this.TBEmptyImgWidth.Size = new System.Drawing.Size(169, 25);
+            this.TBEmptyImgWidth.Size = new System.Drawing.Size(288, 25);
             this.TBEmptyImgWidth.TabIndex = 4;
             // 
             // TBEmptyImgHeight
             // 
-            this.TBEmptyImgHeight.Location = new System.Drawing.Point(107, 86);
+            this.TBEmptyImgHeight.Location = new System.Drawing.Point(107, 55);
             this.TBEmptyImgHeight.Name = "TBEmptyImgHeight";
-            this.TBEmptyImgHeight.Size = new System.Drawing.Size(169, 25);
+            this.TBEmptyImgHeight.Size = new System.Drawing.Size(288, 25);
             this.TBEmptyImgHeight.TabIndex = 5;
             // 
             // BtnCreateEmptyImg
             // 
-            this.BtnCreateEmptyImg.Location = new System.Drawing.Point(282, 55);
+            this.BtnCreateEmptyImg.Location = new System.Drawing.Point(401, 24);
             this.BtnCreateEmptyImg.Name = "BtnCreateEmptyImg";
-            this.BtnCreateEmptyImg.Size = new System.Drawing.Size(136, 56);
+            this.BtnCreateEmptyImg.Size = new System.Drawing.Size(211, 56);
             this.BtnCreateEmptyImg.TabIndex = 6;
-            this.BtnCreateEmptyImg.Text = "Create";
+            this.BtnCreateEmptyImg.Text = "Create...";
             this.BtnCreateEmptyImg.UseVisualStyleBackColor = true;
+            this.BtnCreateEmptyImg.Click += new System.EventHandler(this.BtnCreateEmptyImg_Click);
             // 
             // GroupBoxLog
             // 
             this.GroupBoxLog.Controls.Add(this.TBLog);
             this.GroupBoxLog.Location = new System.Drawing.Point(16, 261);
             this.GroupBoxLog.Name = "GroupBoxLog";
-            this.GroupBoxLog.Size = new System.Drawing.Size(396, 146);
+            this.GroupBoxLog.Size = new System.Drawing.Size(396, 181);
             this.GroupBoxLog.TabIndex = 8;
             this.GroupBoxLog.TabStop = false;
             this.GroupBoxLog.Text = "Log";
@@ -401,14 +393,41 @@
             this.TBLog.Location = new System.Drawing.Point(7, 25);
             this.TBLog.Multiline = true;
             this.TBLog.Name = "TBLog";
-            this.TBLog.Size = new System.Drawing.Size(379, 113);
+            this.TBLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.TBLog.Size = new System.Drawing.Size(379, 150);
             this.TBLog.TabIndex = 0;
+            this.TBLog.WordWrap = false;
+            this.TBLog.Enter += new System.EventHandler(this.TBLog_Enter);
+            // 
+            // LinkLabelAbout
+            // 
+            this.LinkLabelAbout.AutoSize = true;
+            this.LinkLabelAbout.Location = new System.Drawing.Point(418, 412);
+            this.LinkLabelAbout.Name = "LinkLabelAbout";
+            this.LinkLabelAbout.Size = new System.Drawing.Size(87, 15);
+            this.LinkLabelAbout.TabIndex = 9;
+            this.LinkLabelAbout.TabStop = true;
+            this.LinkLabelAbout.Text = "Loading...";
+            this.LinkLabelAbout.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelAbout_LinkClicked);
+            // 
+            // CBLaunchWhenDone
+            // 
+            this.CBLaunchWhenDone.AutoSize = true;
+            this.CBLaunchWhenDone.Checked = true;
+            this.CBLaunchWhenDone.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CBLaunchWhenDone.Location = new System.Drawing.Point(9, 144);
+            this.CBLaunchWhenDone.Name = "CBLaunchWhenDone";
+            this.CBLaunchWhenDone.Size = new System.Drawing.Size(234, 19);
+            this.CBLaunchWhenDone.TabIndex = 9;
+            this.CBLaunchWhenDone.Text = "Launch Directory When Done";
+            this.CBLaunchWhenDone.UseVisualStyleBackColor = true;
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(869, 415);
+            this.ClientSize = new System.Drawing.Size(1064, 454);
+            this.Controls.Add(this.LinkLabelAbout);
             this.Controls.Add(this.GroupBoxLog);
             this.Controls.Add(this.GroupBoxConvert);
             this.Controls.Add(this.GroupBoxResize);
@@ -469,12 +488,13 @@
         private System.Windows.Forms.Button BtnCreateEmptyImg;
         private System.Windows.Forms.TextBox TBEmptyImgHeight;
         private System.Windows.Forms.TextBox TBEmptyImgWidth;
-        private System.Windows.Forms.TextBox TBEmptyImgFileName;
         private System.Windows.Forms.Label LabelEmptyImgHeight;
         private System.Windows.Forms.Label LabelEmptyImgWidth;
-        private System.Windows.Forms.Label LabelEmptyImgFileName;
         private System.Windows.Forms.GroupBox GroupBoxLog;
         private System.Windows.Forms.TextBox TBLog;
+        private System.Windows.Forms.LinkLabel LinkLabelAbout;
+        private System.Windows.Forms.SaveFileDialog SaveFileDialogMain;
+        private System.Windows.Forms.CheckBox CBLaunchWhenDone;
     }
 }
 
