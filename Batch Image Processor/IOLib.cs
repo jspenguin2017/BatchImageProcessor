@@ -47,6 +47,39 @@ namespace Batch_Image_Processor
         }
 
         /// <summary>
+        /// Parse an ImageFormat to string
+        /// </summary>
+        /// <param name="format">The format to parse</param>
+        /// <returns></returns>
+        public static string formatToString(ImageFormat format)
+        {
+            if (format == ImageFormat.Bmp)
+            {
+                return ".bmp";
+            }
+            else if (format == ImageFormat.Gif)
+            {
+                return ".gif";
+            }
+            else if (format == ImageFormat.Jpeg)
+            {
+                return ".jpg";
+            }
+            else if (format == ImageFormat.Png)
+            {
+                return ".png";
+            }
+            else if (format == ImageFormat.Tiff)
+            {
+                return ".tiff";
+            }
+            else
+            {
+                return ".png";
+            }
+        }
+
+        /// <summary>
         /// Check if a image format can be read
         /// </summary>
         /// <param name="ext">The extension of the file</param>

@@ -27,7 +27,7 @@ namespace Batch_Image_Processor
         /// <summary>
         /// The name of this software
         /// </summary>
-        public const string NAME = "Image Batch Processor v1.0 by X01X012013";
+        public const string NAME = "Image Batch Processor v1.1 by X01X012013";
 
         /// <summary>
         /// Form Load event handler
@@ -304,7 +304,7 @@ namespace Batch_Image_Processor
                         {
                             Directory.CreateDirectory(dirOut);
                         }
-                        catch (Exception err) when (err is IOException || err is UnauthorizedAccessException || err is ArgumentException || err is ArgumentNullException || err is PathTooLongException || err is DirectoryNotFoundException)
+                        catch (Exception err) when (err is IOException || err is UnauthorizedAccessException || err is ArgumentException || err is ArgumentNullException || err is PathTooLongException || err is DirectoryNotFoundException || err is NotSupportedException)
                         {
                             MessageBox.Show("Could not create output directory. ");
                             return false;
@@ -345,6 +345,7 @@ namespace Batch_Image_Processor
                 if (!IOLib.checkFileName(fileNamePrefix))
                 {
                     MessageBox.Show("File name prefix is not valid. ");
+                    GroupBoxConvert.Enabled = true;
                     TBRenamePrefix.Focus();
                     return;
                 }
@@ -352,6 +353,7 @@ namespace Batch_Image_Processor
                 {
                     MessageBox.Show("File name suffix is not valid. ");
                     TBRenameSuffix.Focus();
+                    GroupBoxConvert.Enabled = true;
                     return;
                 }
             }
@@ -406,11 +408,11 @@ namespace Batch_Image_Processor
                     string outFile;
                     if (keepFileName)
                     {
-                        outFile = Path.Combine(dirOut, Path.GetFileName(validFiles[i]));
+                        outFile = Path.Combine(dirOut, Path.GetFileNameWithoutExtension(validFiles[i]) + IOLib.formatToString(format));
                     }
                     else
                     {
-                        outFile = Path.Combine(dirOut, fileNamePrefix + i.ToString() + fileNameSuffix + Path.GetExtension(files[i]));
+                        outFile = Path.Combine(dirOut, fileNamePrefix + i.ToString() + fileNameSuffix + IOLib.formatToString(format));
                     }
                     //Convert and write out
                     if (!ImLib.ImSave(resize ? scaledImg : img, outFile, format, false))
