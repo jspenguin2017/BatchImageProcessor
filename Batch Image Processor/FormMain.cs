@@ -173,66 +173,12 @@ namespace Batch_Image_Processor
         /// <param name="e"></param>
         private async void BtnStart_Click(object sender, EventArgs e)
         {
-            //Check input directory
-            if (!Directory.Exists(TBDirIn.Text))
-            {
-                MessageBox.Show("Input directory does not exist. ");
-                TBDirIn.Focus();
-                return;
-            }
-            //Check output directory
-            if (!Directory.Exists(TBDirOut.Text))
-            {
-                if (MessageBox.Show("", "Output directory does not exist, would you like to create it? ", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    try
-                    {
-                        Directory.CreateDirectory(TBDirOut.Text);
-                    }
-                    catch (Exception err) when (err is IOException || err is UnauthorizedAccessException || err is ArgumentException || err is ArgumentNullException || err is PathTooLongException || err is DirectoryNotFoundException)
-                    {
-                        MessageBox.Show("Could not create output directory. ");
-                        TBDirOut.Focus();
-                        return;
-                    }
-                }
-                else
-                {
-                    TBDirOut.Focus();
-                    return;
-                }
-            }
-            //Check resize dimensions
-            int width;
-            int height;
-            if (CBLimRes.Checked)
-            {
-                if (!validateDimensions(out width, out height))
-                {
-                    return;
-                }
-            }
-            //Check file names
-            if (!CBKeepFileName.Checked)
-            {
-                if (!IOLib.checkFileName(TBRenamePrefix.Text))
-                {
-                    MessageBox.Show("File name prefix is not valid. ");
-                    TBRenamePrefix.Focus();
-                    return;
-                }
-                if (!IOLib.checkFileName(TBRenameSuffix.Text))
-                {
-                    MessageBox.Show("File name suffix is not valid. ");
-                    TBRenameSuffix.Focus();
-                    return;
-                }
-            }
-            //Start processing
-            await Task.Run(() =>
-            {
-
-            });
+            //Lock UI
+            GroupBoxConvert.Enabled = false;
+            //Call core function
+            await ProcessImages();
+            //Unlock UI
+            GroupBoxConvert.Enabled = true;
         }
 
         /// <summary>
@@ -246,7 +192,7 @@ namespace Batch_Image_Processor
             int width;
             int height;
             //Parse width and height
-            if (!validateDimensions(out width, out height))
+            if (!validateDimensions(TBEmptyImgWidth, TBEmptyImgHeight, out width, out height))
             {
                 return;
             }
@@ -255,7 +201,7 @@ namespace Batch_Image_Processor
             //Show dialogue
             if (SaveFileDialogMain.ShowDialog() == DialogResult.OK)
             {
-                //Lock UI while processing
+                //Lock UI
                 GroupBoxCreateEmptyImg.Enabled = false;
                 //OK clicked, save file
                 bool success = await Task.Run(() =>
@@ -305,22 +251,103 @@ namespace Batch_Image_Processor
         /// <param name="width">The width output variable</param>
         /// <param name="height">The height output varialbe</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        private bool validateDimensions(out int width, out int height)
+        private bool validateDimensions(TextBox tbWidth, TextBox tbHeight, out int width, out int height)
         {
-            if (!ImLib.ValidateDimension(TBEmptyImgWidth.Text, out width))
+            if (!ImLib.ValidateDimension(tbWidth.Text, out width))
             {
                 MessageBox.Show("The width entered is not valid. ");
-                TBEmptyImgWidth.Focus();
+                tbWidth.Focus();
                 height = -1;
                 return false;
             }
-            if (!ImLib.ValidateDimension(TBEmptyImgHeight.Text, out height))
+            if (!ImLib.ValidateDimension(tbHeight.Text, out height))
             {
                 MessageBox.Show("The height entered is not valid. ");
-                TBEmptyImgHeight.Focus();
+                tbHeight.Focus();
                 return false;
             }
             return true;
         }
+
+        #region Core Code
+
+        /// <summary>
+        /// The core code of this software
+        /// </summary>
+        private async Task ProcessImages()
+        {
+            //Check input directory
+            if (!Directory.Exists(TBDirIn.Text))
+            {
+                MessageBox.Show("Input directory does not exist. ");
+                TBDirIn.Focus();
+                return;
+            }
+            //Check output directory
+            if (!Directory.Exists(TBDirOut.Text))
+            {
+                if (MessageBox.Show("Output directory does not exist, would you like to create it? ", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    bool dirCreateResult = await Task.Run(() =>
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(TBDirOut.Text);
+                        }
+                        catch (Exception err) when (err is IOException || err is UnauthorizedAccessException || err is ArgumentException || err is ArgumentNullException || err is PathTooLongException || err is DirectoryNotFoundException)
+                        {
+                            MessageBox.Show("Could not create output directory. ");
+                            return false;
+                        }
+                        return true;
+                    });
+                    //Check if directory was successfully created
+                    if (!dirCreateResult)
+                    {
+                        TBDirOut.Focus();
+                        return;
+                    }
+                }
+                else
+                {
+                    TBDirOut.Focus();
+                    return;
+                }
+            }
+            //Check resize dimensions
+            int width;
+            int height;
+            if (CBLimRes.Checked)
+            {
+                if (!validateDimensions(TBLimWidth, TBLimHeight, out width, out height))
+                {
+                    return;
+                }
+            }
+            //Check file names
+            if (!CBKeepFileName.Checked)
+            {
+                if (!IOLib.checkFileName(TBRenamePrefix.Text))
+                {
+                    MessageBox.Show("File name prefix is not valid. ");
+                    TBRenamePrefix.Focus();
+                    return;
+                }
+                if (!IOLib.checkFileName(TBRenameSuffix.Text))
+                {
+                    MessageBox.Show("File name suffix is not valid. ");
+                    TBRenameSuffix.Focus();
+                    return;
+                }
+            }
+            //Start processing
+            await Task.Run(() =>
+            {
+
+            });
+        }
+
+        #endregion
+
     }
 }
