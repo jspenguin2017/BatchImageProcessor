@@ -25,8 +25,9 @@ namespace Batch_Image_Processor
         /// <param name="img">Image to save</param>
         /// <param name="outFile">Path to write</param>
         /// <param name="format">Output format of the image</param>
+        /// <param name="showErr">Set this argument to true to show error message to the user</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public static bool ImSave(Image img, string outFile, ImageFormat format)
+        public static bool ImSave(Image img, string outFile, ImageFormat format, bool showErr)
         {
             try
             {
@@ -35,7 +36,10 @@ namespace Batch_Image_Processor
             }
             catch (Exception err) when (err is ArgumentNullException || err is ExternalException)
             {
-                MessageBox.Show("Failed to save image to " + outFile + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                if (showErr)
+                {
+                    MessageBox.Show("Failed to save image to " + outFile + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                }
                 return false;
             }
 
@@ -56,8 +60,9 @@ namespace Batch_Image_Processor
         /// </summary>
         /// <param name="path">Path to the file to load</param>
         /// <param name="img">The image read, will be 1x1 empty bitmap if the operation was not successful</param>
+        /// <param name="showErr">Set this argument to true to show error message to the user</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public static bool ImLoad(string path, out Image img)
+        public static bool ImLoad(string path, out Image img, bool showErr)
         {
 
             try
@@ -67,7 +72,10 @@ namespace Batch_Image_Processor
             }
             catch (Exception err) when (err is OutOfMemoryException || err is FileNotFoundException || err is ArgumentException)
             {
-                MessageBox.Show("Failed to load image from " + path + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                if (showErr)
+                {
+                    MessageBox.Show("Failed to load image from " + path + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                }
                 img = new Bitmap(1, 1);
                 return false;
             }
@@ -82,8 +90,9 @@ namespace Batch_Image_Processor
         /// <param name="maxHeight">The maximum height of output image</param>
         /// <param name="id">A string to identify the image, shown to the user if there is an error</param>
         /// <param name="img">The scaled image, will be 1x1 empty image if the operation was not successful</param>
+        /// <param name="showErr">Set this argument to true to show error message to the user</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public static bool ImScale(Image imIn, int maxWidth, int maxHeight, string id, out Image img)
+        public static bool ImScale(Image imIn, int maxWidth, int maxHeight, string id, out Image img, bool showErr)
         {
             //Find the ratio of old image to new image
             double ratioWidth = (double)maxWidth / imIn.Width;
@@ -101,7 +110,10 @@ namespace Batch_Image_Processor
             }
             catch (Exception err)
             {
-                MessageBox.Show("Failed to allocate memeory while processing " + id + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                if (showErr)
+                {
+                    MessageBox.Show("Failed to allocate memeory while processing " + id + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                }
                 img = newImage;
                 return false;
             }
@@ -127,8 +139,9 @@ namespace Batch_Image_Processor
         /// <param name="height">Height of the image</param>
         /// <param name="outPath">The output path</param>
         /// <param name="format">The format of the image</param>
+        /// <param name="showErr">Set this argument to true to show error message to the user</param>
         /// <returns>True if operation was successful, false otherwise</returns>
-        public static bool ImEmpty(int width, int height, string outPath, ImageFormat format)
+        public static bool ImEmpty(int width, int height, string outPath, ImageFormat format, bool showErr)
         {
             //Create empty image
             Bitmap bmp = new Bitmap(1, 1);
@@ -138,11 +151,14 @@ namespace Batch_Image_Processor
             }
             catch (Exception err)
             {
-                MessageBox.Show("Failed to allocate memeory while creating empty image. " + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                if (showErr)
+                {
+                    MessageBox.Show("Failed to allocate memeory while creating empty image. " + Environment.NewLine + Environment.NewLine + "Error message: " + err.Message);
+                }
                 return false;
             }
             //Save the image
-            return ImSave(bmp, outPath, format);
+            return ImSave(bmp, outPath, format, showErr);
         }
 
         /// <summary>

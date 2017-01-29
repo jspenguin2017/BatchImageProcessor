@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -24,7 +27,7 @@ namespace Batch_Image_Processor
         /// <summary>
         /// The name of this software
         /// </summary>
-        public const string NAME = "Image Batch Processor v0.1 by X01X012013";
+        public const string NAME = "Image Batch Processor v1.0 by X01X012013";
 
         /// <summary>
         /// Form Load event handler
@@ -77,8 +80,8 @@ namespace Batch_Image_Processor
         /// <param name="e"></param>
         private void CBLimRes_CheckedChanged(object sender, EventArgs e)
         {
-            TBLimWidth.Enabled = CBLimRes.Checked;
-            TBLimHeight.Enabled = CBLimRes.Checked;
+            TBResizeWidth.Enabled = CBResize.Checked;
+            TBResizeHeight.Enabled = CBResize.Checked;
         }
 
         /// <summary>
@@ -206,7 +209,7 @@ namespace Batch_Image_Processor
                 //OK clicked, save file
                 bool success = await Task.Run(() =>
                 {
-                    return ImLib.ImEmpty(width, height, SaveFileDialogMain.FileName, IOLib.parseFormat(SaveFileDialogMain.FilterIndex - 1));
+                    return ImLib.ImEmpty(width, height, SaveFileDialogMain.FileName, IOLib.parseFormat(SaveFileDialogMain.FilterIndex - 1), true);
                 });
                 //Launch directory if successful and checkbox checked
                 if (success && CBLaunchWhenDone.Checked)
@@ -217,13 +220,15 @@ namespace Batch_Image_Processor
                     });
                 }
                 //Log
-                putLog((success ? "Created" : "Failed to create") + " empty image of size " + width.ToString() + "x" + height.ToString() + " to " + SaveFileDialogMain.FileName);
+                putLog((success ? "Created" : "ERROR: Failed to create") + " empty image of size " + width.ToString() + "x" + height.ToString() + " to " + SaveFileDialogMain.FileName);
                 //Unlock UI
                 GroupBoxCreateEmptyImg.Enabled = true;
             }
         }
 
         #endregion
+
+        #region Helper Functions
 
         /// <summary>
         /// Write log into log textbox, a new line will be automatically added
@@ -269,6 +274,8 @@ namespace Batch_Image_Processor
             return true;
         }
 
+        #endregion
+
         #region Core Code
 
         /// <summary>
@@ -277,14 +284,16 @@ namespace Batch_Image_Processor
         private async Task ProcessImages()
         {
             //Check input directory
-            if (!Directory.Exists(TBDirIn.Text))
+            string dirIn = TBDirIn.Text;
+            if (!Directory.Exists(dirIn))
             {
                 MessageBox.Show("Input directory does not exist. ");
                 TBDirIn.Focus();
                 return;
             }
             //Check output directory
-            if (!Directory.Exists(TBDirOut.Text))
+            string dirOut = TBDirOut.Text;
+            if (!Directory.Exists(dirOut))
             {
                 if (MessageBox.Show("Output directory does not exist, would you like to create it? ", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -292,7 +301,7 @@ namespace Batch_Image_Processor
                     {
                         try
                         {
-                            Directory.CreateDirectory(TBDirOut.Text);
+                            Directory.CreateDirectory(dirOut);
                         }
                         catch (Exception err) when (err is IOException || err is UnauthorizedAccessException || err is ArgumentException || err is ArgumentNullException || err is PathTooLongException || err is DirectoryNotFoundException)
                         {
@@ -315,36 +324,105 @@ namespace Batch_Image_Processor
                 }
             }
             //Check resize dimensions
-            int width;
-            int height;
-            if (CBLimRes.Checked)
+            bool resize = CBResize.Checked;
+            int width = -1;
+            int height = -1;
+            if (resize)
             {
-                if (!validateDimensions(TBLimWidth, TBLimHeight, out width, out height))
+                if (!validateDimensions(TBResizeWidth, TBResizeHeight, out width, out height))
                 {
                     return;
                 }
             }
             //Check file names
-            if (!CBKeepFileName.Checked)
+            bool keepFileName = CBKeepFileName.Checked;
+            string fileNamePrefix = TBRenamePrefix.Text;
+            string fileNameSuffix = TBRenameSuffix.Text;
+            if (!keepFileName)
             {
-                if (!IOLib.checkFileName(TBRenamePrefix.Text))
+                if (!IOLib.checkFileName(fileNamePrefix))
                 {
                     MessageBox.Show("File name prefix is not valid. ");
                     TBRenamePrefix.Focus();
                     return;
                 }
-                if (!IOLib.checkFileName(TBRenameSuffix.Text))
+                if (!IOLib.checkFileName(fileNameSuffix))
                 {
                     MessageBox.Show("File name suffix is not valid. ");
                     TBRenameSuffix.Focus();
                     return;
                 }
             }
+            //Get output format
+            ImageFormat format = IOLib.parseFormat(ComboBoxOutFormat.SelectedIndex);
             //Start processing
+            int total = 0;
+            int error = 0;
             await Task.Run(() =>
             {
-
+                //Get potential files to process
+                string[] files = Directory.GetFiles(dirIn);
+                //Find files that are images
+                List<string> validFiles = new List<string>();
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (IOLib.formatCanRead(Path.GetExtension(files[i])))
+                    {
+                        validFiles.Add(files[i]);
+                    }
+                }
+                //Write file count
+                Interlocked.Add(ref total, validFiles.Count);
+                //Start processing each image
+                Parallel.For(0, validFiles.Count, (i) =>
+                {
+                    //Load the image
+                    Image img;
+                    if (!ImLib.ImLoad(validFiles[i], out img, false))
+                    {
+                        putLog("ERROR: Could not read " + validFiles[i]);
+                        //Update counter
+                        Interlocked.Add(ref error, 1);
+                        return;
+                    }
+                    //Scale the image
+                    Image scaledImg = new Bitmap(1, 1);
+                    if (resize)
+                    {
+                        if (!ImLib.ImScale(img, width, height, "", out scaledImg, false))
+                        {
+                            putLog("ERROR: Could not allocate memory to process " + validFiles[i]);
+                            img.Dispose();
+                            return;
+                        }
+                        else
+                        {
+                            img.Dispose();
+                        }
+                    }
+                    //Find output file name
+                    string outFile;
+                    if (keepFileName)
+                    {
+                        outFile = Path.Combine(dirOut, Path.GetFileName(validFiles[i]));
+                    }
+                    else
+                    {
+                        outFile = Path.Combine(dirOut, fileNamePrefix + i.ToString() + fileNameSuffix);
+                    }
+                    //Convert and write out
+                    if (!ImLib.ImSave(resize ? scaledImg : img, outFile, format, false))
+                    {
+                        putLog("ERROR: Could not write to " + outFile);
+                    }
+                    else
+                    {
+                        putLog("Processed " + validFiles[i] + " and is saved to " + outFile);
+                    }
+                });
             });
+            //Tell the user that we finished
+            MessageBox.Show("Processing finished, failed to process " + error.ToString() + " images out of " + total.ToString() + ". Please check the log for more details. ");
         }
 
         #endregion

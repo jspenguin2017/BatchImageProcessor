@@ -41,9 +41,9 @@
             this.LabelLimFileSize = new System.Windows.Forms.Label();
             this.LabelLimHeight = new System.Windows.Forms.Label();
             this.LabelLimWidth = new System.Windows.Forms.Label();
-            this.TBLimHeight = new System.Windows.Forms.TextBox();
-            this.TBLimWidth = new System.Windows.Forms.TextBox();
-            this.CBLimRes = new System.Windows.Forms.CheckBox();
+            this.TBResizeHeight = new System.Windows.Forms.TextBox();
+            this.TBResizeWidth = new System.Windows.Forms.TextBox();
+            this.CBResize = new System.Windows.Forms.CheckBox();
             this.GroupBoxConvert = new System.Windows.Forms.GroupBox();
             this.CBLaunchWhenDone = new System.Windows.Forms.CheckBox();
             this.GroupBoxCreateEmptyImg = new System.Windows.Forms.GroupBox();
@@ -137,9 +137,9 @@
             this.GroupBoxResize.Controls.Add(this.LabelLimFileSize);
             this.GroupBoxResize.Controls.Add(this.LabelLimHeight);
             this.GroupBoxResize.Controls.Add(this.LabelLimWidth);
-            this.GroupBoxResize.Controls.Add(this.TBLimHeight);
-            this.GroupBoxResize.Controls.Add(this.TBLimWidth);
-            this.GroupBoxResize.Controls.Add(this.CBLimRes);
+            this.GroupBoxResize.Controls.Add(this.TBResizeHeight);
+            this.GroupBoxResize.Controls.Add(this.TBResizeWidth);
+            this.GroupBoxResize.Controls.Add(this.CBResize);
             this.GroupBoxResize.Location = new System.Drawing.Point(17, 78);
             this.GroupBoxResize.Name = "GroupBoxResize";
             this.GroupBoxResize.Size = new System.Drawing.Size(395, 176);
@@ -195,34 +195,34 @@
             this.LabelLimWidth.TabIndex = 3;
             this.LabelLimWidth.Text = "Maximum Width (Pixel): ";
             // 
-            // TBLimHeight
+            // TBResizeHeight
             // 
-            this.TBLimHeight.Location = new System.Drawing.Point(211, 81);
-            this.TBLimHeight.Name = "TBLimHeight";
-            this.TBLimHeight.Size = new System.Drawing.Size(174, 25);
-            this.TBLimHeight.TabIndex = 3;
-            this.TBLimHeight.Text = "720";
+            this.TBResizeHeight.Location = new System.Drawing.Point(211, 81);
+            this.TBResizeHeight.Name = "TBResizeHeight";
+            this.TBResizeHeight.Size = new System.Drawing.Size(174, 25);
+            this.TBResizeHeight.TabIndex = 3;
+            this.TBResizeHeight.Text = "720";
             // 
-            // TBLimWidth
+            // TBResizeWidth
             // 
-            this.TBLimWidth.Location = new System.Drawing.Point(211, 50);
-            this.TBLimWidth.Name = "TBLimWidth";
-            this.TBLimWidth.Size = new System.Drawing.Size(174, 25);
-            this.TBLimWidth.TabIndex = 2;
-            this.TBLimWidth.Text = "1280";
+            this.TBResizeWidth.Location = new System.Drawing.Point(211, 50);
+            this.TBResizeWidth.Name = "TBResizeWidth";
+            this.TBResizeWidth.Size = new System.Drawing.Size(174, 25);
+            this.TBResizeWidth.TabIndex = 2;
+            this.TBResizeWidth.Text = "1280";
             // 
-            // CBLimRes
+            // CBResize
             // 
-            this.CBLimRes.AutoSize = true;
-            this.CBLimRes.Checked = true;
-            this.CBLimRes.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CBLimRes.Location = new System.Drawing.Point(8, 25);
-            this.CBLimRes.Name = "CBLimRes";
-            this.CBLimRes.Size = new System.Drawing.Size(154, 19);
-            this.CBLimRes.TabIndex = 1;
-            this.CBLimRes.Text = "Limit Resolution";
-            this.CBLimRes.UseVisualStyleBackColor = true;
-            this.CBLimRes.CheckedChanged += new System.EventHandler(this.CBLimRes_CheckedChanged);
+            this.CBResize.AutoSize = true;
+            this.CBResize.Checked = true;
+            this.CBResize.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CBResize.Location = new System.Drawing.Point(8, 25);
+            this.CBResize.Name = "CBResize";
+            this.CBResize.Size = new System.Drawing.Size(234, 19);
+            this.CBResize.TabIndex = 1;
+            this.CBResize.Text = "Resize Image to Fit into: ";
+            this.CBResize.UseVisualStyleBackColor = true;
+            this.CBResize.CheckedChanged += new System.EventHandler(this.CBLimRes_CheckedChanged);
             // 
             // GroupBoxConvert
             // 
@@ -470,14 +470,14 @@
         private System.Windows.Forms.FolderBrowserDialog FolderBrowserDialogMain;
         private System.Windows.Forms.GroupBox GroupBoxResize;
         private System.Windows.Forms.GroupBox GroupBoxConvert;
-        private System.Windows.Forms.CheckBox CBLimRes;
+        private System.Windows.Forms.CheckBox CBResize;
         private System.Windows.Forms.Label LabelLimFileSize;
         private System.Windows.Forms.Label LabelLimHeight;
         private System.Windows.Forms.Label LabelLimWidth;
         private System.Windows.Forms.CheckBox CBLimFileSize;
         private System.Windows.Forms.TextBox TBLimFileSize;
-        private System.Windows.Forms.TextBox TBLimHeight;
-        private System.Windows.Forms.TextBox TBLimWidth;
+        private System.Windows.Forms.TextBox TBResizeHeight;
+        private System.Windows.Forms.TextBox TBResizeWidth;
         private System.Windows.Forms.ComboBox ComboBoxOutFormat;
         private System.Windows.Forms.Label LabelOutFormat;
         private System.Windows.Forms.TextBox TBRenameSuffix;

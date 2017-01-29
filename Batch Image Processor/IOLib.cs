@@ -1,4 +1,5 @@
-﻿using System.Drawing.Imaging;
+﻿using System;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -43,6 +44,20 @@ namespace Batch_Image_Processor
                     //This should never happen
                     return ImageFormat.Png;
             }
+        }
+
+        /// <summary>
+        /// Check if a image format can be read
+        /// </summary>
+        /// <param name="ext">The extension of the file</param>
+        /// <returns>True if the file is expected to be readable by this software, false otherwise</returns>
+        public static bool formatCanRead(string ext)
+        {
+            //Supported extensions
+            string[] supportedFormats = new string[] { ".bmp", ".gif", ".jpg", ".png", ".tiff", " .emf", ".ico", ".wmf" };
+            //Cast input to lower case
+            ext = ext.ToLower();
+            return (Array.IndexOf(supportedFormats, ext)) > -1;
         }
 
         /// <summary>
