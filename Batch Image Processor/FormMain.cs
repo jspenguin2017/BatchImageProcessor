@@ -82,6 +82,7 @@ namespace Batch_Image_Processor
         {
             TBResizeWidth.Enabled = CBResize.Checked;
             TBResizeHeight.Enabled = CBResize.Checked;
+            CBNoUpscale.Enabled = CBResize.Checked;
         }
 
         /// <summary>
