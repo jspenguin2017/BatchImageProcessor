@@ -27,7 +27,7 @@ namespace Batch_Image_Processor
         /// <summary>
         /// The name of this software
         /// </summary>
-        public const string NAME = "Image Batch Processor v1.1 by X01X012013";
+        public const string NAME = "Batch Image Processor v1.1 by X01X012013";
 
         /// <summary>
         /// Form Load event handler
