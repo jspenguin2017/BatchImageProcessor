@@ -27,7 +27,7 @@ namespace Batch_Image_Processor
         /// <summary>
         /// The name of this software
         /// </summary>
-        public const string NAME = "Batch Image Processor v1.1 by X01X012013";
+        public const string NAME = "Batch Image Processor v1.1 by jspenguin2017";
 
         /// <summary>
         /// Form Load event handler
@@ -161,7 +161,7 @@ namespace Batch_Image_Processor
             //Use await here to prevent slow starting browser to stuck our software
             await Task.Run(() =>
             {
-                Process.Start("https://github.com/X01X012013/BatchImageProcessor");
+                Process.Start("https://github.com/jspenguin2017/BatchImageProcessor");
             });
         }
 
