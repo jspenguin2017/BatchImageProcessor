@@ -183,10 +183,8 @@ namespace Batch_Image_Processor
         /// <param name="e"></param>
         private async void BtnCreateEmptyImg_Click(object sender, EventArgs e)
         {
-            int width;
-            int height;
             //Parse width and height
-            if (!ValidateDimensions(TBEmptyImgWidth, TBEmptyImgHeight, out width, out height))
+            if (!ValidateDimensions(TBEmptyImgWidth, TBEmptyImgHeight, out int width, out int height))
             {
                 return;
             }
