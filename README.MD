@@ -1,6 +1,6 @@
 # Batch Image Processor
 
-This is a simple batch image resizing tool, download links can be found in the release page. 
+This is a simple batch image resizing tool, download links can be found in releases. 
 
 This software is built with Visual Studio 2017. 
 
