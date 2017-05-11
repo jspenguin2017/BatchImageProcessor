@@ -36,9 +36,7 @@
             this.BtnDirOut = new System.Windows.Forms.Button();
             this.FolderBrowserDialogMain = new System.Windows.Forms.FolderBrowserDialog();
             this.GroupBoxResize = new System.Windows.Forms.GroupBox();
-            this.CBLimFileSize = new System.Windows.Forms.CheckBox();
-            this.TBLimFileSize = new System.Windows.Forms.TextBox();
-            this.LabelLimFileSize = new System.Windows.Forms.Label();
+            this.CBNoUpscale = new System.Windows.Forms.CheckBox();
             this.LabelLimHeight = new System.Windows.Forms.Label();
             this.LabelLimWidth = new System.Windows.Forms.Label();
             this.TBResizeHeight = new System.Windows.Forms.TextBox();
@@ -64,7 +62,6 @@
             this.TBLog = new System.Windows.Forms.RichTextBox();
             this.LinkLabelAbout = new System.Windows.Forms.LinkLabel();
             this.SaveFileDialogMain = new System.Windows.Forms.SaveFileDialog();
-            this.CBNoUpscale = new System.Windows.Forms.CheckBox();
             this.GroupBoxResize.SuspendLayout();
             this.GroupBoxConvert.SuspendLayout();
             this.GroupBoxCreateEmptyImg.SuspendLayout();
@@ -134,9 +131,6 @@
             // GroupBoxResize
             // 
             this.GroupBoxResize.Controls.Add(this.CBNoUpscale);
-            this.GroupBoxResize.Controls.Add(this.CBLimFileSize);
-            this.GroupBoxResize.Controls.Add(this.TBLimFileSize);
-            this.GroupBoxResize.Controls.Add(this.LabelLimFileSize);
             this.GroupBoxResize.Controls.Add(this.LabelLimHeight);
             this.GroupBoxResize.Controls.Add(this.LabelLimWidth);
             this.GroupBoxResize.Controls.Add(this.TBResizeHeight);
@@ -144,40 +138,22 @@
             this.GroupBoxResize.Controls.Add(this.CBResize);
             this.GroupBoxResize.Location = new System.Drawing.Point(17, 78);
             this.GroupBoxResize.Name = "GroupBoxResize";
-            this.GroupBoxResize.Size = new System.Drawing.Size(395, 176);
+            this.GroupBoxResize.Size = new System.Drawing.Size(395, 130);
             this.GroupBoxResize.TabIndex = 5;
             this.GroupBoxResize.TabStop = false;
             this.GroupBoxResize.Text = "Resize";
             // 
-            // CBLimFileSize
+            // CBNoUpscale
             // 
-            this.CBLimFileSize.AutoSize = true;
-            this.CBLimFileSize.Enabled = false;
-            this.CBLimFileSize.Location = new System.Drawing.Point(6, 112);
-            this.CBLimFileSize.Name = "CBLimFileSize";
-            this.CBLimFileSize.Size = new System.Drawing.Size(146, 19);
-            this.CBLimFileSize.TabIndex = 4;
-            this.CBLimFileSize.Text = "Limit File Size";
-            this.CBLimFileSize.UseVisualStyleBackColor = true;
-            this.CBLimFileSize.CheckedChanged += new System.EventHandler(this.CBLimFileSize_CheckedChanged);
-            // 
-            // TBLimFileSize
-            // 
-            this.TBLimFileSize.Enabled = false;
-            this.TBLimFileSize.Location = new System.Drawing.Point(211, 137);
-            this.TBLimFileSize.Name = "TBLimFileSize";
-            this.TBLimFileSize.Size = new System.Drawing.Size(174, 25);
-            this.TBLimFileSize.TabIndex = 5;
-            this.TBLimFileSize.Text = "10240";
-            // 
-            // LabelLimFileSize
-            // 
-            this.LabelLimFileSize.AutoSize = true;
-            this.LabelLimFileSize.Location = new System.Drawing.Point(6, 140);
-            this.LabelLimFileSize.Name = "LabelLimFileSize";
-            this.LabelLimFileSize.Size = new System.Drawing.Size(199, 15);
-            this.LabelLimFileSize.TabIndex = 5;
-            this.LabelLimFileSize.Text = "Maximum File Size (kB): ";
+            this.CBNoUpscale.AutoSize = true;
+            this.CBNoUpscale.Checked = true;
+            this.CBNoUpscale.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CBNoUpscale.Location = new System.Drawing.Point(255, 24);
+            this.CBNoUpscale.Name = "CBNoUpscale";
+            this.CBNoUpscale.Size = new System.Drawing.Size(130, 19);
+            this.CBNoUpscale.TabIndex = 1;
+            this.CBNoUpscale.Text = "Don\'t Upscale";
+            this.CBNoUpscale.UseVisualStyleBackColor = true;
             // 
             // LabelLimHeight
             // 
@@ -396,9 +372,9 @@
             // GroupBoxLog
             // 
             this.GroupBoxLog.Controls.Add(this.TBLog);
-            this.GroupBoxLog.Location = new System.Drawing.Point(16, 261);
+            this.GroupBoxLog.Location = new System.Drawing.Point(16, 214);
             this.GroupBoxLog.Name = "GroupBoxLog";
-            this.GroupBoxLog.Size = new System.Drawing.Size(396, 181);
+            this.GroupBoxLog.Size = new System.Drawing.Size(396, 228);
             this.GroupBoxLog.TabIndex = 8;
             this.GroupBoxLog.TabStop = false;
             this.GroupBoxLog.Text = "Log (Double Click to Copy)";
@@ -407,7 +383,7 @@
             // 
             this.TBLog.Location = new System.Drawing.Point(6, 24);
             this.TBLog.Name = "TBLog";
-            this.TBLog.Size = new System.Drawing.Size(384, 151);
+            this.TBLog.Size = new System.Drawing.Size(384, 198);
             this.TBLog.TabIndex = 0;
             this.TBLog.Text = "";
             this.TBLog.WordWrap = false;
@@ -426,18 +402,6 @@
             this.LinkLabelAbout.Text = "Loading...";
             this.LinkLabelAbout.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelAbout_LinkClicked);
             // 
-            // CBNoUpscale
-            // 
-            this.CBNoUpscale.AutoSize = true;
-            this.CBNoUpscale.Checked = true;
-            this.CBNoUpscale.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CBNoUpscale.Location = new System.Drawing.Point(255, 24);
-            this.CBNoUpscale.Name = "CBNoUpscale";
-            this.CBNoUpscale.Size = new System.Drawing.Size(130, 19);
-            this.CBNoUpscale.TabIndex = 1;
-            this.CBNoUpscale.Text = "Don\'t Upscale";
-            this.CBNoUpscale.UseVisualStyleBackColor = true;
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -454,7 +418,7 @@
             this.Controls.Add(this.TBDirOut);
             this.Controls.Add(this.TBDirIn);
             this.Controls.Add(this.LabelDirIn);
-            this.Font = new System.Drawing.Font("宋体", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Font = new System.Drawing.Font("SimSun", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "FormMain";
@@ -485,11 +449,8 @@
         private System.Windows.Forms.GroupBox GroupBoxResize;
         private System.Windows.Forms.GroupBox GroupBoxConvert;
         private System.Windows.Forms.CheckBox CBResize;
-        private System.Windows.Forms.Label LabelLimFileSize;
         private System.Windows.Forms.Label LabelLimHeight;
         private System.Windows.Forms.Label LabelLimWidth;
-        private System.Windows.Forms.CheckBox CBLimFileSize;
-        private System.Windows.Forms.TextBox TBLimFileSize;
         private System.Windows.Forms.TextBox TBResizeHeight;
         private System.Windows.Forms.TextBox TBResizeWidth;
         private System.Windows.Forms.ComboBox ComboBoxOutFormat;

@@ -59,7 +59,7 @@ namespace Batch_Image_Processor
         /// <param name="e"></param>
         private void BtnDirIn_Click(object sender, EventArgs e)
         {
-            IOLib.chooseDir(TBDirIn, FolderBrowserDialogMain);
+            IOLib.ChooseDir(TBDirIn, FolderBrowserDialogMain);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Batch_Image_Processor
         /// <param name="e"></param>
         private void BtnDirOut_Click(object sender, EventArgs e)
         {
-            IOLib.chooseDir(TBDirOut, FolderBrowserDialogMain);
+            IOLib.ChooseDir(TBDirOut, FolderBrowserDialogMain);
         }
 
         /// <summary>
@@ -83,16 +83,6 @@ namespace Batch_Image_Processor
             TBResizeWidth.Enabled = CBResize.Checked;
             TBResizeHeight.Enabled = CBResize.Checked;
             CBNoUpscale.Enabled = CBResize.Checked;
-        }
-
-        /// <summary>
-        /// Limit file size checkbox state change handler
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CBLimFileSize_CheckedChanged(object sender, EventArgs e)
-        {
-            TBLimFileSize.Enabled = CBLimFileSize.Checked;
         }
 
         /// <summary>
@@ -196,7 +186,7 @@ namespace Batch_Image_Processor
             int width;
             int height;
             //Parse width and height
-            if (!validateDimensions(TBEmptyImgWidth, TBEmptyImgHeight, out width, out height))
+            if (!ValidateDimensions(TBEmptyImgWidth, TBEmptyImgHeight, out width, out height))
             {
                 return;
             }
@@ -210,7 +200,7 @@ namespace Batch_Image_Processor
                 //OK clicked, save file
                 bool success = await Task.Run(() =>
                 {
-                    return ImLib.ImEmpty(width, height, SaveFileDialogMain.FileName, IOLib.parseFormat(SaveFileDialogMain.FilterIndex - 1), true);
+                    return ImLib.ImEmpty(width, height, SaveFileDialogMain.FileName, IOLib.ParseFormat(SaveFileDialogMain.FilterIndex - 1), true);
                 });
                 //Launch directory if successful and checkbox checked
                 if (success && CBLaunchWhenDone.Checked)
@@ -221,7 +211,7 @@ namespace Batch_Image_Processor
                     });
                 }
                 //Log
-                putLog((success ? "Created" : "ERROR: Failed to create") + " empty image of size " + width.ToString() + "x" + height.ToString() + " to " + SaveFileDialogMain.FileName);
+                PutLog((success ? "Created" : "ERROR: Failed to create") + " empty image of size " + width.ToString() + "x" + height.ToString() + " to " + SaveFileDialogMain.FileName);
                 //Unlock UI
                 GroupBoxCreateEmptyImg.Enabled = true;
             }
@@ -236,7 +226,7 @@ namespace Batch_Image_Processor
         /// This method can be called from another thread
         /// </summary>
         /// <param name="msg">The message to write</param>
-        private void putLog(string msg)
+        private void PutLog(string msg)
         {
             if (TBLog.InvokeRequired)
             {
@@ -257,7 +247,7 @@ namespace Batch_Image_Processor
         /// <param name="width">The width output variable</param>
         /// <param name="height">The height output varialbe</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        private bool validateDimensions(TextBox tbWidth, TextBox tbHeight, out int width, out int height)
+        private bool ValidateDimensions(TextBox tbWidth, TextBox tbHeight, out int width, out int height)
         {
             if (!ImLib.ValidateDimension(tbWidth.Text, out width))
             {
@@ -331,7 +321,7 @@ namespace Batch_Image_Processor
             int height = -1;
             if (resize)
             {
-                if (!validateDimensions(TBResizeWidth, TBResizeHeight, out width, out height))
+                if (!ValidateDimensions(TBResizeWidth, TBResizeHeight, out width, out height))
                 {
                     return;
                 }
@@ -342,14 +332,14 @@ namespace Batch_Image_Processor
             string fileNameSuffix = TBRenameSuffix.Text;
             if (!keepFileName)
             {
-                if (!IOLib.checkFileName(fileNamePrefix))
+                if (!IOLib.CheckFileName(fileNamePrefix))
                 {
                     MessageBox.Show("File name prefix is not valid. ");
                     GroupBoxConvert.Enabled = true;
                     TBRenamePrefix.Focus();
                     return;
                 }
-                if (!IOLib.checkFileName(fileNameSuffix))
+                if (!IOLib.CheckFileName(fileNameSuffix))
                 {
                     MessageBox.Show("File name suffix is not valid. ");
                     TBRenameSuffix.Focus();
@@ -358,7 +348,7 @@ namespace Batch_Image_Processor
                 }
             }
             //Get output format
-            ImageFormat format = IOLib.parseFormat(ComboBoxOutFormat.SelectedIndex);
+            ImageFormat format = IOLib.ParseFormat(ComboBoxOutFormat.SelectedIndex);
             //Start processing
             int total = 0;
             int error = 0;
@@ -370,7 +360,7 @@ namespace Batch_Image_Processor
                 List<string> validFiles = new List<string>();
                 for (int i = 0; i < files.Length; i++)
                 {
-                    if (IOLib.formatCanRead(Path.GetExtension(files[i])))
+                    if (IOLib.FormatCanRead(Path.GetExtension(files[i])))
                     {
                         validFiles.Add(files[i]);
                     }
@@ -384,7 +374,7 @@ namespace Batch_Image_Processor
                     Image img;
                     if (!ImLib.ImLoad(validFiles[i], out img, false))
                     {
-                        putLog("ERROR: Could not read " + validFiles[i]);
+                        PutLog("ERROR: Could not read " + validFiles[i]);
                         //Update counter
                         Interlocked.Add(ref error, 1);
                         return;
@@ -395,7 +385,7 @@ namespace Batch_Image_Processor
                     {
                         if (!ImLib.ImScale(img, width, height, "", out scaledImg, noUpscale, false))
                         {
-                            putLog("ERROR: Could not allocate memory to process " + validFiles[i]);
+                            PutLog("ERROR: Could not allocate memory to process " + validFiles[i]);
                             img.Dispose();
                             return;
                         }
@@ -408,20 +398,20 @@ namespace Batch_Image_Processor
                     string outFile;
                     if (keepFileName)
                     {
-                        outFile = Path.Combine(dirOut, Path.GetFileNameWithoutExtension(validFiles[i]) + IOLib.formatToString(format));
+                        outFile = Path.Combine(dirOut, Path.GetFileNameWithoutExtension(validFiles[i]) + IOLib.FormatToString(format));
                     }
                     else
                     {
-                        outFile = Path.Combine(dirOut, fileNamePrefix + i.ToString() + fileNameSuffix + IOLib.formatToString(format));
+                        outFile = Path.Combine(dirOut, fileNamePrefix + i.ToString() + fileNameSuffix + IOLib.FormatToString(format));
                     }
                     //Convert and write out
                     if (!ImLib.ImSave(resize ? scaledImg : img, outFile, format, false))
                     {
-                        putLog("ERROR: Could not write to " + outFile);
+                        PutLog("ERROR: Could not write to " + outFile);
                     }
                     else
                     {
-                        putLog("Processed " + validFiles[i] + " and is saved to " + outFile);
+                        PutLog("Processed " + validFiles[i] + " and is saved to " + outFile);
                     }
                 });
             });

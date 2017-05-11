@@ -13,7 +13,7 @@ namespace Batch_Image_Processor
         /// </summary>
         /// <param name="tb">The textbox to fill path into</param>
         /// <param name="dialog">A folder browser dialog</param>
-        public static void chooseDir(TextBox tb, FolderBrowserDialog dialog)
+        public static void ChooseDir(TextBox tb, FolderBrowserDialog dialog)
         {
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -26,7 +26,7 @@ namespace Batch_Image_Processor
         /// </summary>
         /// <param name="format">The format index</param>
         /// <returns>Equivalent ImageFormat, defaults to PNG if something went wrong</returns>
-        public static ImageFormat parseFormat(int format)
+        public static ImageFormat ParseFormat(int format)
         {
             switch (format)
             {
@@ -51,7 +51,7 @@ namespace Batch_Image_Processor
         /// </summary>
         /// <param name="format">The format to parse</param>
         /// <returns></returns>
-        public static string formatToString(ImageFormat format)
+        public static string FormatToString(ImageFormat format)
         {
             if (format == ImageFormat.Bmp)
             {
@@ -84,7 +84,7 @@ namespace Batch_Image_Processor
         /// </summary>
         /// <param name="ext">The extension of the file</param>
         /// <returns>True if the file is expected to be readable by this software, false otherwise</returns>
-        public static bool formatCanRead(string ext)
+        public static bool FormatCanRead(string ext)
         {
             //Supported extensions
             string[] supportedFormats = new string[] { ".bmp", ".gif", ".jpg", ".png", ".tiff", " .emf", ".ico", ".wmf" };
@@ -109,7 +109,7 @@ namespace Batch_Image_Processor
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns>True if the file name is valid, false otherwise</returns>
-        public static bool checkFileName(string fileName)
+        public static bool CheckFileName(string fileName)
         {
             Regex fileNameValidator = new Regex("[" + Regex.Escape(InvalidFileNameChars) + "]");
             return !fileNameValidator.IsMatch(fileName);
