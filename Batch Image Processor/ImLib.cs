@@ -7,6 +7,9 @@ using System.Windows.Forms;
 
 namespace Batch_Image_Processor
 {
+    /// <summary>
+    /// Image manipulation library
+    /// </summary>
     static class ImLib
     {
 

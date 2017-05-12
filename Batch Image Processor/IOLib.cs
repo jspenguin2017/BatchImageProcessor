@@ -6,6 +6,9 @@ using System.Windows.Forms;
 
 namespace Batch_Image_Processor
 {
+    /// <summary>
+    /// File IO library
+    /// </summary>
     static class IOLib
     {
         /// <summary>
