@@ -13,16 +13,12 @@ namespace Batch_Image_Processor
 {
     public partial class FormMain : Form
     {
-
-        #region Initialization
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
         public FormMain()
         {
             InitializeComponent();
         }
+
+        #region Initialization
 
         /// <summary>
         /// The name of this software
