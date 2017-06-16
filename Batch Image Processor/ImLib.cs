@@ -13,8 +13,6 @@ namespace Batch_Image_Processor
     static class ImLib
     {
 
-        #region Helper Functions
-
         /// <summary>
         /// Save an image to a file, supports following formats: 
         /// 
@@ -104,6 +102,7 @@ namespace Batch_Image_Processor
             double ratio = Math.Min(ratioWidth, ratioHeight);
             if (noUpscale && ratio >= 1)
             {
+                //Must create a new Bitmap or we will have trouble saving the image
                 img = new Bitmap(imIn);
                 return true;
             }
@@ -137,8 +136,6 @@ namespace Batch_Image_Processor
             return true;
 
         }
-
-        #endregion
 
         /// <summary>
         /// Create an empty image and save it to a file
